@@ -65,6 +65,8 @@ CREATE TABLE genre(
     CONSTRAINT genre_fk FOREIGN KEY (program_id) REFERENCES program(id)
 );
 COMMENT ON TABLE genre IS 'Tabela que define o atributo composto "genre" da entidade programa';
+COMMENT ON COLUMN genre.program_id IS 'Identificador do programa associado ao gênero';
+COMMENT ON COLUMN genre.nome IS 'Nome do gênero';
 
 /* ===========================
    📅 SEASON TABLE (Weak Entity)
@@ -80,6 +82,9 @@ CREATE TABLE season(
     CONSTRAINT seasonStatus_nn CHECK(season_status IS NOT NULL)
 );
 COMMENT ON TABLE season IS 'Tabela que define a entidade fraca "temporada"';
+COMMENT ON COLUMN season.id_program IS 'Identificador do programa relacionado à temporada';
+COMMENT ON COLUMN season.season_number IS 'Número da temporada';
+COMMENT ON COLUMN season.season_status IS 'Status da temporada (em andamento ou finalizada)';
 
 /* ===========================
    📦 CONTENT TABLE (Superentity)
@@ -94,6 +99,9 @@ CREATE TABLE content(
     CONSTRAINT contentTitle_nn CHECK(content_title IS NOT NULL)
 );
 COMMENT ON TABLE content IS 'Tabela que define o conteúdo transmitido pela emissora';
+COMMENT ON COLUMN content.content_id IS 'Identificador único do conteúdo';
+COMMENT ON COLUMN content.content_duration IS 'Duração do conteúdo em minutos';
+COMMENT ON COLUMN content.content_title IS 'Título do conteúdo';
 
 /* ===========================
    🎬 EPISODE TABLE (Specialization of Content)
@@ -109,12 +117,16 @@ CREATE TABLE episode(
     CONSTRAINT episode_season_fk FOREIGN KEY(id_program,season_number) REFERENCES season(id_program,season_number),
     CONSTRAINT episode_nn CHECK (episode_number IS NOT NULL),
     CONSTRAINT episode_range CHECK(episode_number > 0) 
-
 );
+COMMENT ON TABLE episode IS 'Tabela que armazena os episódios de cada temporada de um programa';
+COMMENT ON COLUMN episode.id_c IS 'Identificador do conteúdo do episódio';
+COMMENT ON COLUMN episode.id_program IS 'Identificador do programa ao qual o episódio pertence';
+COMMENT ON COLUMN episode.season_number IS 'Número da temporada do episódio';
+COMMENT ON COLUMN episode.episode_number IS 'Número do episódio na temporada';
 
 /* ===========================
-   🎯 CAMPAIGN TABLE
-   • Stores all advertising campaigns purchased by advertisers
+   🎯 ADVERTISEMENT TABLE
+   • Stores all advertisements and their target audience
    =========================== */
 CREATE TABLE advertisement(
     id_c NUMBER,
@@ -122,8 +134,10 @@ CREATE TABLE advertisement(
     CONSTRAINT advertisement_pk PRIMARY KEY(id_c),
     CONSTRAINT advertisement_fk FOREIGN KEY(id_c) REFERENCES content(content_id),
     CONSTRAINT target_audience_nn CHECK(target_audience IS  NOT NULL)
-
 );
+COMMENT ON TABLE advertisement IS 'Tabela que armazena os anúncios veiculados';
+COMMENT ON COLUMN advertisement.id_c IS 'Identificador do conteúdo do anúncio';
+COMMENT ON COLUMN advertisement.target_audience IS 'Público-alvo do anúncio';
 
 /* ===========================
    💼 ADVERTISER TABLE
@@ -195,6 +209,10 @@ COMMENT ON COLUMN studio.studio_capacity IS 'Capacidade máxima do estúdio';
 COMMENT ON COLUMN studio.maintenance_cost IS 'Custo de manutenção do estúdio';
 COMMENT ON COLUMN studio.address_id IS 'Referência ao endereço do estúdio';
 
+/* ===========================
+   📢 PROMOTE TABLE
+   • Relaciona campanhas, anunciantes e anúncios
+   =========================== */
 CREATE TABLE promote(
     advertisement_id NUMBER,
     advertiser_id NUMBER,
@@ -204,20 +222,29 @@ CREATE TABLE promote(
     CONSTRAINT promote_advertiser_fk FOREIGN KEY(advertiser_id) REFERENCES advertiser(advertiser_id),
     CONSTRAINT promote_campaign_fk FOREIGN KEY(campaign_id) REFERENCES campaign(campaign_id)
 );
-
 COMMENT ON TABLE promote IS 'Tabela que relaciona campanhas publicitárias com anunciantes e conteúdos';
 COMMENT ON COLUMN promote.advertisement_id IS 'Identificador do conteúdo publicitário';
+COMMENT ON COLUMN promote.advertiser_id IS 'Identificador do anunciante';
+COMMENT ON COLUMN promote.campaign_id IS 'Identificador da campanha';
 
+/* ===========================
+   📡 CHANNEL TABLE
+   • Stores all broadcast channels
+   =========================== */
 CREATE TABLE channel(
     frequency NUMBER,
     channel_name VARCHAR2(70),
     CONSTRAINT channel_pk PRIMARY KEY(frequency),
     CONSTRAINT channel_name_nn CHECK(channel_name IS NOT NULL)
 );
-
 COMMENT ON TABLE channel IS 'Tabela que armazena os canais de transmissão';
 COMMENT ON COLUMN channel.frequency IS 'Frequência do canal';
+COMMENT ON COLUMN channel.channel_name IS 'Nome do canal';
 
+/* ===========================
+   📺 BROADCAST TABLE
+   • Stores all content transmissions on channels
+   =========================== */
 CREATE TABLE broadcast(
     channel_frequency NUMBER,
     content_id NUMBER,
@@ -232,7 +259,6 @@ CREATE TABLE broadcast(
     CONSTRAINT broadcast_reach_audience_nn CHECK(reach_audience IS NOT NULL),
     CONSTRAINT broadcast_reach_audience_range CHECK(reach_audience >= 0)
 );
-
 COMMENT ON TABLE broadcast IS 'Tabela que armazena as transmissões de conteúdos nos canais';
 COMMENT ON COLUMN broadcast.channel_frequency IS 'Frequência do canal de transmissão';
 COMMENT ON COLUMN broadcast.content_id IS 'Identificador do conteúdo transmitido';
@@ -240,6 +266,10 @@ COMMENT ON COLUMN broadcast.broadcast_begin_time IS 'Horário de início da tran
 COMMENT ON COLUMN broadcast.broadcast_end_time IS 'Horário de término da transmissão';
 COMMENT ON COLUMN broadcast.reach_audience IS 'Número de pessoas alcançadas pela transmissão';
 
+/* ===========================
+   ⏸️ INTERRUPT TABLE
+   • Stores interruptions for advertisements during content
+   =========================== */
 CREATE TABLE interrupt(
     content_id NUMBER,
     channel_frequency NUMBER,
@@ -256,6 +286,10 @@ COMMENT ON COLUMN interrupt.channel_frequency IS 'Frequência do canal onde ocor
 COMMENT ON COLUMN interrupt.advertisement_id IS 'Identificador do anúncio exibido durante a interrupção';
 COMMENT ON COLUMN interrupt.interruption_time IS 'Horário da interrupção para o anúncio';
 
+/* ===========================
+   🎥 PRODUCTION TABLE
+   • Stores all productions in studios
+   =========================== */
 CREATE TABLE production(
     studio_id NUMBER,
     content_id NUMBER,
@@ -274,6 +308,10 @@ COMMENT ON COLUMN production.content_id IS 'Identificador do conteúdo produzido
 COMMENT ON COLUMN production.production_begin IS 'Horário de início da produção do conteúdo';
 COMMENT ON COLUMN production.production_end IS 'Horário de término da produção do conteúdo';
 
+/* ===========================
+   👤 EMPLOYEE TABLE
+   • Stores all employees of the station
+   =========================== */
 CREATE TABLE employee(
     employee_id NUMBER,
     employee_salary NUMBER,
@@ -291,6 +329,10 @@ COMMENT ON COLUMN employee.employee_salary IS 'Salário do funcionário';
 COMMENT ON COLUMN employee.employee_supervisor IS 'Identificador do supervisor do funcionário';
 COMMENT ON COLUMN employee.employee_name IS 'Nome do funcionário';
 
+/* ===========================
+   🤝 PARTICIPATE TABLE
+   • Stores employee participation in productions
+   =========================== */
 CREATE TABLE participate(
     employee_id NUMBER,
     studio_id NUMBER,
@@ -306,7 +348,6 @@ CREATE TABLE participate(
     CONSTRAINT participate_end_nn CHECK(participation_end IS NOT NULL),
     CONSTRAINT participate_end_after_begin CHECK(participation_end > participation_begin)
 );
-
 COMMENT ON TABLE participate IS 'Tabela que armazena a participação dos funcionários nas produções';
 COMMENT ON COLUMN participate.employee_id IS 'Identificador do funcionário que participa da produção';  
 COMMENT ON COLUMN participate.studio_id IS 'Identificador do estúdio onde a produção ocorre';
