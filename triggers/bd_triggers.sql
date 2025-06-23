@@ -18,3 +18,41 @@ BEGIN
     INTO :NEW.id 
     FROM DUAL;
 END;
+/
+CREATE OR REPLACE TRIGGER trg_auto_season_number
+BEFORE INSERT ON season
+FOR EACH ROW
+DECLARE
+  v_next_number NUMBER;
+BEGIN
+  SELECT NVL(MAX(season_number), 0) + 1
+  INTO v_next_number
+  FROM season_copy
+  WHERE id_program = :NEW.id_program;
+
+  :NEW.season_number := v_next_number;
+END;
+
+CREATE OR REPLACE TRIGGER trg_auto_ep_number
+BEFORE INSERT ON episode
+FOR EACH ROW
+DECLARE
+  v_next_number NUMBER;
+BEGIN
+  SELECT NVL(MAX(episode_number), 0) + 1
+  INTO v_next_number
+  FROM episode_copy
+  WHERE id_program = :NEW.id_program;
+
+  :NEW.episode_number := v_next_number;
+END;
+
+CREATE OR REPLACE TRIGGER trg_content_id
+BEFORE INSERT ON content
+FOR EACH ROW
+BEGIN
+    SELECT content_seq.NEXTVAL
+    INTO :NEW.content_id
+    FROM DUAL;
+END;
+/

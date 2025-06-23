@@ -87,6 +87,14 @@ COMMENT ON COLUMN season.season_number IS 'Número da temporada';
 COMMENT ON COLUMN season.season_status IS 'Status da temporada (em andamento ou finalizada)';
 
 /* ===========================
+   📝 SEASON_COPY TABLE (Auxiliary Table)
+   • Tabela auxiliar usada para contornar restrições de triggers mutating em Oracle.
+   • Armazena uma cópia temporária dos dados de "season" para cálculo do próximo season_number.
+   =========================== */
+CREATE TABLE season_copy AS
+SELECT * FROM season WHERE 1 = 0;
+
+/* ===========================
    📦 CONTENT TABLE (Superentity)
     • Stores all content broadcasted by the station
    =========================== */
@@ -123,6 +131,14 @@ COMMENT ON COLUMN episode.id_c IS 'Identificador do conteúdo do episódio';
 COMMENT ON COLUMN episode.id_program IS 'Identificador do programa ao qual o episódio pertence';
 COMMENT ON COLUMN episode.season_number IS 'Número da temporada do episódio';
 COMMENT ON COLUMN episode.episode_number IS 'Número do episódio na temporada';
+
+/* ===========================
+   📝 EPISODE_COPY TABLE (Auxiliary Table)
+   • Tabela auxiliar usada para contornar restrições de triggers mutating em Oracle.
+   • Armazena uma cópia temporária dos dados de "episode" para cálculo do próximo episode_number.
+   =========================== */
+CREATE TABLE episode_copy AS
+SELECT * FROM episode WHERE 1 = 0;
 
 /* ===========================
    🎯 ADVERTISEMENT TABLE
