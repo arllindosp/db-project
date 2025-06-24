@@ -32,7 +32,7 @@ BEGIN
 
   :NEW.season_number := v_next_number;
 END;
-
+/
 CREATE OR REPLACE TRIGGER trg_auto_ep_number
 BEFORE INSERT ON episode
 FOR EACH ROW
@@ -46,7 +46,7 @@ BEGIN
 
   :NEW.episode_number := v_next_number;
 END;
-
+/
 CREATE OR REPLACE TRIGGER trg_content_id
 BEFORE INSERT ON content
 FOR EACH ROW

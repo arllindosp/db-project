@@ -171,19 +171,53 @@ BEGIN
     
 END;
 /
-select * FROM ADVERTISEMENT;
-select * from advertiser;
-select * from CAMPAIGN;
+
+-- Esta constraint garante que toda tupla em advertisement deve estar associada a uma tupla existente em promote,
+-- ou seja, todo anúncio deve obrigatoriamente participar da relação ternária (advertisement, advertiser, campaign).
+-- Isso reforça a participação total de advertisement na relação promote.
 ALTER TABLE advertisement
 ADD CONSTRAINT advertisement_promote_fk 
 FOREIGN KEY (advertisement_id,advertiser_id,campaign_id)
 REFERENCES promote(advertisement_id,advertiser_id,campaign_id)
 DEFERRABLE INITIALLY DEFERRED;
 
-SELECT * from campaign ;
-select * from advertiser;
-select * from ADVERTISEMENT;
+DECLARE
+    v_advertisement_id NUMBER;
+    v_advertiser_id NUMBER;
+    v_campaign_id NUMBER;
 
+BEGIN
+    SELECT c.campaign_id INTO v_campaign_id
+    FROM campaign c
+    WHERE c.campaign_description = 'Aurora Perfumes Summer Launch 2025';
+
+    SELECT a.advertiser_id INTO v_advertiser_id
+    FROM advertiser a
+    WHERE a.advertiser_name = 'Aurora Perfumes';
+
+    SELECT a.content_id INTO v_advertisement_id
+    FROM advertisement a
+    JOIN content c ON a.content_id = c.content_id
+    WHERE c.content_title = 'Lançamento Perfume Aurora - Sinta a Nova Essência';
+
+-- 4. Relaciona anúncio, anunciante e campanha na promote
+    INSERT INTO promote (advertisement_id, advertiser_id, campaign_id) VALUES (v_advertisement_id,v_advertiser_id,v_campaign_id);
+    
+END;
+/
+
+-- Atualiza os campos de chave estrangeira em advertisement para garantir participação total na relação ternária promote
+UPDATE advertisement a
+SET (a.advertisement_id, a.advertiser_id, a.campaign_id) = (
+    SELECT p.advertisement_id, p.advertiser_id, p.campaign_id
+    FROM promote p
+    WHERE p.advertisement_id = a.content_id
+)
+WHERE EXISTS (
+    SELECT 1 FROM promote p WHERE p.advertisement_id = a.content_id
+);
+
+select * from ADVERTISEMENT;
 select * from ADVERTISER;
 SELECT * FROM PROGRAM;
 SELECT * FROM season;
