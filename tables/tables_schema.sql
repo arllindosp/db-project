@@ -152,6 +152,7 @@ CREATE TABLE advertisement(
     content_id NUMBER,
     advertiser_id NUMBER,
     campaign_id NUMBER,
+    advertisement_id NUMBER,
     target_audience VARCHAR2(100),
     CONSTRAINT advertisement_pk PRIMARY KEY(content_id),
     CONSTRAINT advertisement_fk FOREIGN KEY(content_id) REFERENCES content(content_id),
