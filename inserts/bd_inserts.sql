@@ -58,29 +58,8 @@ WHERE nome = 'Todo mundo odeia Pedro Moraes';
 -- • Insere os episódios associadas ao programa "Todo mundo odeia Pedro Moraes";
 -- Episódio 1
 INSERT INTO content (content_duration,content_title) VALUES (45,'Episódio Piloto' );
-DECLARE
-    v_content_id NUMBER;
-    v_id_program NUMBER;
-    v_season_number NUMBER;
-BEGIN
+TRUNCATE TABLE episode_copy;
 
-    SELECT content_seq.CURRVAL INTO v_content_id FROM DUAL;
-    SELECT s.id_program, s.season_number
-    INTO v_id_program, v_season_number
-    FROM season s
-    JOIN program p ON s.id_program = p.id
-    WHERE p.nome = 'Todo mundo odeia Pedro Moraes'
-      AND s.season_number = 1;   
-    
-    TRUNCATE TABLE episode_copy;
-    INSERT INTO episode_copy SELECT * FROM episode;
-
-    INSERT INTO episode(id_c, id_program, season_number)
-    VALUES (v_content_id, v_id_program, v_season_number);
-END;
-/
--- Episódio 2
-INSERT INTO content (content_duration, content_title) VALUES (44, 'Episódio 2: O Plano de Pedro');
 DECLARE
     v_content_id NUMBER;
     v_id_program NUMBER;
@@ -94,16 +73,38 @@ BEGIN
     WHERE p.nome = 'Todo mundo odeia Pedro Moraes'
       AND s.season_number = 1;
 
-    TRUNCATE TABLE episode_copy;
     INSERT INTO episode_copy SELECT * FROM episode;
 
-    INSERT INTO episode(id_c, id_program, season_number)
+    INSERT INTO episode(content_id, id_program, season_number)
+    VALUES (v_content_id, v_id_program, v_season_number);
+END;
+/
+-- Episódio 2
+INSERT INTO content (content_duration, content_title) VALUES (44, 'Episódio 2: O Plano de Pedro');
+    TRUNCATE TABLE episode_copy;
+DECLARE
+    v_content_id NUMBER;
+    v_id_program NUMBER;
+    v_season_number NUMBER;
+BEGIN
+    SELECT content_seq.CURRVAL INTO v_content_id FROM DUAL;
+    SELECT s.id_program, s.season_number
+    INTO v_id_program, v_season_number
+    FROM season s
+    JOIN program p ON s.id_program = p.id
+    WHERE p.nome = 'Todo mundo odeia Pedro Moraes'
+      AND s.season_number = 1;
+
+    INSERT INTO episode_copy SELECT * FROM episode;
+
+    INSERT INTO episode(content_id, id_program, season_number)
     VALUES (v_content_id, v_id_program, v_season_number);
 END;
 /
 
 -- Episódio 3
 INSERT INTO content (content_duration, content_title) VALUES (46, 'Episódio 3: A Festa Surpresa');
+    TRUNCATE TABLE episode_copy;
 DECLARE
     v_content_id NUMBER;
     v_id_program NUMBER;
@@ -117,44 +118,50 @@ BEGIN
     WHERE p.nome = 'Todo mundo odeia Pedro Moraes'
       AND s.season_number = 1;
 
-    TRUNCATE TABLE episode_copy;
     INSERT INTO episode_copy SELECT * FROM episode;
 
-    INSERT INTO episode(id_c, id_program, season_number)
+    INSERT INTO episode(content_id, id_program, season_number)
     VALUES (v_content_id, v_id_program, v_season_number);
 END;
 /
 
-INSERT INTO program (nome, classifc_ind) VALUES ('Eu, pedro e as crianças', '10');
+/* ===========================
+   📢 CRIANDO ANÚNCIOS
+   =========================== */
+
+-- 1. Cria um anunciante (advertiser)
+INSERT INTO advertiser (advertiser_name) VALUES ( 'Aurora Perfumes');
+
+-- 2. Cria uma campanha (campaign)
+INSERT INTO campaign (campaign_description) VALUES ('Aurora Perfumes Summer Launch 2025');
+
+-- 3. Cria um anúncio (advertisement) vinculado a um conteúdo
+INSERT INTO content (content_duration, content_title) VALUES ( 10, 'Lançamento Perfume Aurora - Sinta a Nova Essência');
+
+DECLARE
+    v_content_id NUMBER;
+BEGIN
+    SELECT c.content_id INTO v_content_id 
+    FROM content c
+    WHERE c.content_title = 'Lançamento Perfume Aurora - Sinta a Nova Essência';
+    INSERT INTO advertisement (content_id, target_audience) VALUES (v_content_id, 'Mulheres 18-35');
+END;
+/
+-- 4. Relaciona anúncio, anunciante e campanha na promote
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id) VALUES (100, 1, 1);
+ALTER TABLE advertisement
+ADD CONSTRAINT advertisement_promote_fk 
+FOREIGN KEY (content_id,advertiser_id,campaign_id)
+REFERENCES promote(advertisement_id,advertiser_id,campaign_id)
+DEFERRABLE INITIALLY DEFERRED;
 
 
-INSERT INTO season (id_program, season_status)
-SELECT id, 'ongoing'
-FROM program
-WHERE nome = 'Todo mundo odeia Pedro Moraes';
-TRUNCATE TABLE season_copy;
-
-INSERT INTO season_copy
-SELECT * FROM season;
-
-INSERT INTO season (id_program, season_status)
-SELECT id, 'ongoing'
-FROM program
-WHERE nome = 'Todo mundo odeia Pedoro Moraes';
-TRUNCATE TABLE season_copy;
-
-INSERT INTO season_copy
-SELECT * FROM season;
-
-INSERT INTO season(id_program,season_status)
-SELECT id, 'ongoing'
-FROM PROGRAM
-WHERE nome = 'Eu, pedro e as crianças';
+select * from ADVERTISER;
 SELECT * FROM PROGRAM;
 SELECT * FROM season;
 SELECT * FROM GENRE;
 SELECT * FROM EPISODE;
-
+SELECT * FROM ADVERTISEMENT;
 
 
 

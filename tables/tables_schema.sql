@@ -34,6 +34,8 @@ DROP TABLE genre CASCADE CONSTRAINTS;
 DROP TABLE program CASCADE CONSTRAINTS;
 DROP TABLE content CASCADE CONSTRAINTS;
 DROP TABLE employee CASCADE CONSTRAINTS;
+DROP TABLE episode_copy CASCADE CONSTRAINTS;
+DROP TABLE season_copy CASCADE CONSTRAINTS;
 
 /* ===========================
    🟪 PROGRAM TABLE
@@ -53,6 +55,8 @@ COMMENT ON TABLE program IS 'Tabela dos programas da emissora';
 COMMENT ON COLUMN program.id IS 'Código de identicação do programa';
 COMMENT ON COLUMN program.nome IS 'Nome de programa' ;
 COMMENT ON COLUMN program.classifc_ind IS 'Classificação inditificativa do programa';
+
+
 
 /* ===========================
    🎭 GENRE TABLE (Multivalued Attribute)
@@ -116,18 +120,18 @@ COMMENT ON COLUMN content.content_title IS 'Título do conteúdo';
     • Stores all episodes associated with each season and program
    =========================== */
 CREATE TABLE episode(
-    id_c NUMBER,
+    content_id NUMBER,
     id_program NUMBER,
     season_number NUMBER,
     episode_number NUMBER,
-    CONSTRAINT episode_pk PRIMARY KEY(id_c, id_program,season_number),
-    CONSTRAINT episode_fk FOREIGN KEY (id_c) REFERENCES content(content_id),
+    CONSTRAINT episode_pk PRIMARY KEY(content_id, id_program,season_number),
+    CONSTRAINT episode_fk FOREIGN KEY (content_id) REFERENCES content(content_id),
     CONSTRAINT episode_season_fk FOREIGN KEY(id_program,season_number) REFERENCES season(id_program,season_number),
     CONSTRAINT episode_nn CHECK (episode_number IS NOT NULL),
     CONSTRAINT episode_range CHECK(episode_number > 0) 
 );
 COMMENT ON TABLE episode IS 'Tabela que armazena os episódios de cada temporada de um programa';
-COMMENT ON COLUMN episode.id_c IS 'Identificador do conteúdo do episódio';
+COMMENT ON COLUMN episode.content_id IS 'Identificador do conteúdo do episódio';
 COMMENT ON COLUMN episode.id_program IS 'Identificador do programa ao qual o episódio pertence';
 COMMENT ON COLUMN episode.season_number IS 'Número da temporada do episódio';
 COMMENT ON COLUMN episode.episode_number IS 'Número do episódio na temporada';
@@ -145,14 +149,16 @@ SELECT * FROM episode WHERE 1 = 0;
    • Stores all advertisements and their target audience
    =========================== */
 CREATE TABLE advertisement(
-    id_c NUMBER,
+    content_id NUMBER,
+    advertiser_id NUMBER,
+    campaign_id NUMBER,
     target_audience VARCHAR2(100),
-    CONSTRAINT advertisement_pk PRIMARY KEY(id_c),
-    CONSTRAINT advertisement_fk FOREIGN KEY(id_c) REFERENCES content(content_id),
+    CONSTRAINT advertisement_pk PRIMARY KEY(content_id),
+    CONSTRAINT advertisement_fk FOREIGN KEY(content_id) REFERENCES content(content_id),
     CONSTRAINT target_audience_nn CHECK(target_audience IS  NOT NULL)
 );
 COMMENT ON TABLE advertisement IS 'Tabela que armazena os anúncios veiculados';
-COMMENT ON COLUMN advertisement.id_c IS 'Identificador do conteúdo do anúncio';
+COMMENT ON COLUMN advertisement.content_id IS 'Identificador do conteúdo do anúncio';
 COMMENT ON COLUMN advertisement.target_audience IS 'Público-alvo do anúncio';
 
 /* ===========================
@@ -234,7 +240,7 @@ CREATE TABLE promote(
     advertiser_id NUMBER,
     campaign_id NUMBER,
     CONSTRAINT promote_pk PRIMARY KEY(advertisement_id, advertiser_id, campaign_id),
-    CONSTRAINT promote_advertisement_fk FOREIGN KEY(advertisement_id) REFERENCES advertisement(id_c),
+    CONSTRAINT promote_advertisement_fk FOREIGN KEY(advertisement_id) REFERENCES advertisement(content_id),
     CONSTRAINT promote_advertiser_fk FOREIGN KEY(advertiser_id) REFERENCES advertiser(advertiser_id),
     CONSTRAINT promote_campaign_fk FOREIGN KEY(campaign_id) REFERENCES campaign(campaign_id)
 );
@@ -293,7 +299,7 @@ CREATE TABLE interrupt(
     interruption_time TIMESTAMP,
     CONSTRAINT interrupt_pk PRIMARY KEY(content_id, channel_frequency, advertisement_id),
     CONSTRAINT interrupt_broadcast_fk FOREIGN KEY(channel_frequency, content_id) REFERENCES broadcast(channel_frequency, content_id),
-    CONSTRAINT interrupt_advertisement_fk FOREIGN KEY(advertisement_id) REFERENCES advertisement(id_c),
+    CONSTRAINT interrupt_advertisement_fk FOREIGN KEY(advertisement_id) REFERENCES advertisement(content_id),
     CONSTRAINT interrupt_time_nn CHECK(interruption_time IS NOT NULL)
 );
 COMMENT ON TABLE interrupt IS 'Tabela que armazena as interrupções de conteúdos para anúncios';

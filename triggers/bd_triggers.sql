@@ -56,3 +56,24 @@ BEGIN
     FROM DUAL;
 END;
 /
+
+CREATE OR REPLACE TRIGGER trg_advertiser_id
+BEFORE INSERT ON advertiser
+FOR EACH ROW
+BEGIN
+    IF :NEW.advertiser_id IS NULL THEN
+        SELECT advertiser_seq.NEXTVAL INTO :NEW.advertiser_id FROM dual;
+    END IF;
+END;
+/
+
+CREATE OR REPLACE TRIGGER trg_campaign_id
+BEFORE INSERT ON campaign
+FOR EACH ROW
+BEGIN
+    IF :NEW.campaign_id IS NULL THEN
+        SELECT campaign_seq.NEXTVAL INTO :NEW.campaign_id FROM dual;
+    END IF;
+END;
+/
+
