@@ -217,6 +217,61 @@ WHERE EXISTS (
     SELECT 1 FROM promote p WHERE p.advertisement_id = a.content_id
 );
 
+-- Insere o canal "Canal Globix" com frequência 101 e cria uma transmissão (broadcast)
+-- do episódio "Episódio Piloto" nesse canal, das 20:00 às 21:00, para 10.000 espectadores.
+INSERT INTO channel (frequency, channel_name) VALUES (101, 'Canal Globix');
+
+DECLARE
+    v_episode_content_id NUMBER;
+BEGIN
+    SELECT e.content_id
+    INTO v_episode_content_id
+    FROM episode e
+    JOIN content c ON e.content_id = c.content_id
+    WHERE c.content_title = 'Episódio Piloto';
+
+    INSERT INTO broadcast (
+        channel_frequency, content_id, broadcast_begin_time, broadcast_end_time, reach_audience
+    ) VALUES (
+        101, v_episode_content_id,
+        TO_TIMESTAMP('2025-07-01 20:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        TO_TIMESTAMP('2025-07-01 21:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+        10000
+    );
+END;
+/
+
+DECLARE
+    v_episode_content_id NUMBER;
+    v_advertisement_content_id NUMBER;
+BEGIN
+    -- Get the content_id of the episode being broadcast
+    SELECT e.content_id
+    INTO v_episode_content_id
+    FROM episode e
+    JOIN content c ON e.content_id = c.content_id
+    WHERE c.content_title = 'Episódio Piloto';
+
+    -- Get the content_id of the advertisement
+    SELECT c.content_id
+    INTO v_advertisement_content_id
+    FROM advertisement a
+    JOIN content c ON a.content_id = c.content_id
+    WHERE c.content_title = 'Lançamento Perfume Aurora - Sinta a Nova Essência';
+
+    -- Insert the interruption
+    INSERT INTO interrupt (
+        content_id, channel_frequency, advertisement_id, interruption_time
+    ) VALUES (
+        v_episode_content_id,
+        101,
+        v_advertisement_content_id,
+        TO_TIMESTAMP('2025-07-01 20:30:00', 'YYYY-MM-DD HH24:MI:SS')
+    );
+END;
+/
+
+select * from channel;
 select * from ADVERTISEMENT;
 select * from ADVERTISER;
 SELECT * FROM PROGRAM;
@@ -224,6 +279,7 @@ SELECT * FROM season;
 SELECT * FROM GENRE;
 SELECT * FROM EPISODE;
 SELECT * FROM ADVERTISEMENT;
-
+SELECT * FROM BROADCAST;
+SELECT * FROM INTERRUPT;
 
 
