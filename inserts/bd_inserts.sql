@@ -289,8 +289,6 @@ INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUE
 END;
 /
 
-select * from EMPLOYEE;
-
 -- Sub-supervisor 2
 INSERT INTO employee (employee_salary, employee_name) VALUES (7200, 'Carlos Mendes');
 
@@ -383,3 +381,40 @@ BEGIN
     );
 END;
 /
+
+-- 1. Insere um endereço para o estúdio
+INSERT INTO studio_address (neighborhood, street, address_numb)
+VALUES ('Centro', 'Rua das Artes', 123);
+
+-- 2. Insere o estúdio
+INSERT INTO studio (studio_capacity, maintenance_cost, address_id)
+VALUES (200, 8000, 20);
+
+-- 3. Cria um conteúdo para a produção
+INSERT INTO content (content_duration, content_title)
+VALUES (90, 'Making Of: Bastidores do Sucesso');
+
+-- 4. Insere a produção no estúdio
+INSERT INTO production (studio_id, content_id, production_begin, production_end)
+SELECT
+    (SELECT studio_id FROM studio WHERE studio_capacity = 200 AND maintenance_cost = 8000 AND address_id = 20),
+    (SELECT content_id FROM content WHERE content_title = 'Making Of: Bastidores do Sucesso'),
+    TO_TIMESTAMP('2025-08-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+    TO_TIMESTAMP('2025-08-05 18:00:00', 'YYYY-MM-DD HH24:MI:SS')
+FROM dual;
+-- 5. Insere a equipe de produção
+INSERT INTO participate (
+    employee_id, studio_id, content_id, role, participation_begin, participation_end
+)
+SELECT
+    (SELECT employee_id FROM employee WHERE employee_name = 'Renata Martins'),
+    p.studio_id,
+    p.content_id,
+    'Produtor',
+    TO_TIMESTAMP('2025-08-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS'),
+    TO_TIMESTAMP('2025-08-05 18:00:00', 'YYYY-MM-DD HH24:MI:SS')
+FROM production p
+WHERE p.studio_id = (SELECT studio_id FROM studio WHERE studio_capacity = 200 AND maintenance_cost = 8000 AND address_id = 20)
+  AND p.content_id = (SELECT content_id FROM content WHERE content_title = 'Episódio 3: A Festa Surpresa');
+
+SELECT * from content;
