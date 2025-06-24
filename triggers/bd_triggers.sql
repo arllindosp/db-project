@@ -77,3 +77,12 @@ BEGIN
 END;
 /
 
+CREATE OR REPLACE TRIGGER trg_employee_id
+BEFORE INSERT ON employee
+FOR EACH ROW
+BEGIN
+    IF :NEW.employee_id IS NULL THEN
+        SELECT employee_seq.NEXTVAL INTO :NEW.employee_id FROM dual;
+    END IF;
+END;
+/

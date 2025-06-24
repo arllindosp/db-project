@@ -271,15 +271,115 @@ BEGIN
 END;
 /
 
-select * from channel;
-select * from ADVERTISEMENT;
-select * from ADVERTISER;
-SELECT * FROM PROGRAM;
-SELECT * FROM season;
-SELECT * FROM GENRE;
-SELECT * FROM EPISODE;
-SELECT * FROM ADVERTISEMENT;
-SELECT * FROM BROADCAST;
-SELECT * FROM INTERRUPT;
+-- Sub-supervisor 1
+INSERT INTO employee (employee_salary, employee_name) VALUES ( 7000, 'Maria Oliveira');
 
+DECLARE 
+    v_supervisor_id NUMBER;
+BEGIN
+    SELECT e.employee_id INTO  v_supervisor_id 
+    FROM EMPLOYEE e
+    WHERE e.EMPLOYEE_NAME = 'Maria Oliveira' ;
 
+ -- Funcionários subordinados a Maria Oliveira
+INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3500, 'João Silva', v_supervisor_id );
+INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3600, 'Ana Costa',  v_supervisor_id );
+INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3400, 'Lucas Pereira',  v_supervisor_id );
+INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3550, 'Fernanda Souza',  v_supervisor_id );
+END;
+/
+
+select * from EMPLOYEE;
+
+-- Sub-supervisor 2
+INSERT INTO employee (employee_salary, employee_name) VALUES (7200, 'Carlos Mendes');
+
+DECLARE 
+    v_supervisor_id NUMBER;
+BEGIN
+    SELECT e.employee_id INTO  v_supervisor_id 
+    FROM EMPLOYEE e
+    WHERE e.EMPLOYEE_NAME = 'Carlos Mendes' ;
+
+    
+-- Funcionários subordinados a Carlos Mendes
+INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3300, 'Patrícia Lima', v_supervisor_id);
+INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3450, 'Rafael Barbosa', v_supervisor_id);
+INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3250, 'Juliana Martins',  v_supervisor_id);
+INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3350, 'Bruno Almeida',  v_supervisor_id);
+END;
+/
+
+-- Sub-supervisor 3
+INSERT INTO employee (employee_salary, employee_name) VALUES (6500, 'Gabriel Ramos');
+
+DECLARE
+    v_supervisor_id NUMBER;
+BEGIN
+    SELECT e.employee_id INTO v_supervisor_id
+    FROM employee e
+    WHERE e.employee_name = 'Gabriel Ramos';
+
+    -- Funcionários subordinados a Gabriel Ramos
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3200, 'Mariana Duarte', v_supervisor_id);
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3100, 'Thiago Moreira', v_supervisor_id);
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3150, 'Camila Rocha', v_supervisor_id);
+END;
+/
+
+-- Sub-supervisor 4
+INSERT INTO employee (employee_salary, employee_name) VALUES (6600, 'Eduardo Teixeira');
+
+DECLARE
+    v_supervisor_id NUMBER;
+BEGIN
+    SELECT e.employee_id INTO v_supervisor_id
+    FROM employee e
+    WHERE e.employee_name = 'Eduardo Teixeira';
+
+    -- Funcionários subordinados a Eduardo Teixeira
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3250, 'Larissa Fernandes', v_supervisor_id);
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3350, 'Vinícius Cardoso', v_supervisor_id);
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3300, 'Paula Ribeiro', v_supervisor_id);
+END;
+/
+
+-- Sub-supervisor 5
+INSERT INTO employee (employee_salary, employee_name) VALUES (6700, 'Renata Martins');
+
+DECLARE
+    v_supervisor_id NUMBER;
+BEGIN
+    SELECT e.employee_id INTO v_supervisor_id
+    FROM employee e
+    WHERE e.employee_name = 'Renata Martins';
+
+    -- Funcionários subordinados a Renata Martins
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3400, 'Felipe Souza', v_supervisor_id);
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3450, 'Bruna Lima', v_supervisor_id);
+    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3350, 'Diego Alves', v_supervisor_id);
+END;
+/
+
+-- Cria o super supervisor
+INSERT INTO employee (employee_salary, employee_name) VALUES (9000, 'Roberto Figueiredo');
+
+DECLARE
+    v_super_supervisor_id NUMBER;
+BEGIN
+    SELECT e.employee_id INTO v_super_supervisor_id
+    FROM employee e
+    WHERE e.employee_name = 'Roberto Figueiredo';
+
+    -- Atualiza todos os sub-supervisores para serem supervisionados por Roberto Figueiredo
+    UPDATE employee
+    SET employee_supervisor = v_super_supervisor_id
+    WHERE employee_name IN (
+        'Maria Oliveira',
+        'Carlos Mendes',
+        'Gabriel Ramos',
+        'Eduardo Teixeira',
+        'Renata Martins'
+    );
+END;
+/
