@@ -21,6 +21,7 @@ DELETE FROM program WHERE nome = 'Todo mundo odeia Pedro Moraes';
 
 
 --  • Criando o programa
+-- Programa 1: Série de comédia e terror
 INSERT INTO program (nome, classifc_ind) VALUES ('Todo mundo odeia Pedro Moraes', '10');
 
 --  • Insere os gêneros associados ao programa "Todo mundo odeia Pedro Moraes"
@@ -33,6 +34,39 @@ INSERT INTO genre (program_id, nome)
 SELECT id, 'comédia'
 FROM program
 WHERE nome = 'Todo mundo odeia Pedro Moraes';
+-- Programa 2: talk show
+INSERT INTO program (nome, classifc_ind) VALUES ('Conversa com André', '12');
+--  • Insere os gêneros associados ao programa "Conversa com André"
+INSERT INTO genre (program_id, nome) 
+SELECT id, 'talk show' FROM program WHERE nome = 'Conversa com André';
+
+INSERT INTO genre (program_id, nome) 
+SELECT id, 'entretenimento' FROM program WHERE nome = 'Conversa com André';
+-- Programa 3: Documentário
+INSERT INTO program (nome, classifc_ind) VALUES ('Natureza Brasileira', '10');
+--  • Insere os gêneros associados ao programa "Natureza Brasileira"
+INSERT INTO genre (program_id, nome) 
+SELECT id, 'documentário' FROM program WHERE nome = 'Natureza Brasileira';
+
+INSERT INTO genre (program_id, nome) 
+SELECT id, 'educativo' FROM program WHERE nome = 'Natureza Brasileira';
+-- PROGRAMA 4: Programa Infantil
+INSERT INTO program (nome, classifc_ind) VALUES ('Mundo das Crianças', 'L');
+--  • Insere os gêneros associados ao programa "Mundo das Crianças"
+INSERT INTO genre (program_id, nome) 
+SELECT id, 'infantil' FROM program WHERE nome = 'Mundo das Crianças';
+
+INSERT INTO genre (program_id, nome) 
+SELECT id, 'educativo' FROM program WHERE nome = 'Mundo das Crianças';
+-- PROGRAMA 5: Telejornal
+INSERT INTO program (nome, classifc_ind) VALUES ('Jornal da Manhã', '10');
+--  • Insere os gêneros associados ao programa "Jornal da Manhã"
+INSERT INTO genre (program_id, nome) 
+SELECT id, 'jornalismo' FROM program WHERE nome = 'Jornal da Manhã';
+
+INSERT INTO genre (program_id, nome) 
+SELECT id, 'informativo' FROM program WHERE nome = 'Jornal da Manhã';
+
 
 -- Atualiza a tabela auxiliar season_copy com os dados atuais da tabela season.
 -- Necessário para que a trigger de season utilize informações atualizadas e evite problemas de mutating table.
@@ -54,6 +88,14 @@ INSERT INTO season (id_program, season_status)
 SELECT id, 'ongoing'
 FROM program
 WHERE nome = 'Todo mundo odeia Pedro Moraes';
+
+-- • Insere as temporadas associadas ao programa ""Natureza Brasileira"
+
+TRUNCATE TABLE season_copy;
+INSERT INTO season_copy SELECT * FROM season;
+
+INSERT INTO season (id_program, season_status)
+SELECT id, 'finished' FROM program WHERE nome = 'Natureza Brasileira';
 
 -- • Insere os episódios associadas ao programa "Todo mundo odeia Pedro Moraes";
 -- Episódio 1
@@ -124,14 +166,43 @@ BEGIN
     VALUES (v_content_id, v_id_program, v_season_number);
 END;
 /
+-- EPISÓDIOS PARA OUTROS PROGRAMAS
+-- Documentário - Natureza Brasileira
+INSERT INTO content (content_duration, content_title) VALUES (50, 'Amazônia: O Pulmão do Mundo');
+
+DECLARE
+    v_content_id NUMBER;
+    v_id_program NUMBER;
+    v_season_number NUMBER;
+BEGIN
+    SELECT content_seq.CURRVAL INTO v_content_id FROM DUAL;
+    SELECT s.id_program, s.season_number
+    INTO v_id_program, v_season_number
+    FROM season s
+    JOIN program p ON s.id_program = p.id
+    WHERE p.nome = 'Natureza Brasileira' AND s.season_number = 1;
+
+    TRUNCATE TABLE episode_copy;
+    INSERT INTO episode_copy SELECT * FROM episode;
+    
+    INSERT INTO episode(content_id, id_program, season_number)
+    VALUES (v_content_id, v_id_program, v_season_number);
+END;
+/
+-- Programa de Talk Show (sem temporadas - programa único)
+INSERT INTO content (content_duration, content_title) VALUES (60, 'Conversa com André - Edição Especial');
+-- Programa Infantil
+INSERT INTO content (content_duration, content_title) VALUES (30, 'Aprendendo as Cores');
+-- Telejornal
+INSERT INTO content (content_duration, content_title) VALUES (90, 'Jornal da Manhã - Edição de Terça');
 
 /* ===========================
    📢 CRIANDO ANÚNCIOS
    =========================== */
 
 -- 1. Cria um anunciante (advertiser)
+-- Anunciante 1
 INSERT INTO advertiser (advertiser_name) VALUES ( 'Aurora Perfumes');
-
 -- 2. Cria uma campanha (campaign)
 INSERT INTO campaign (campaign_description) VALUES ('Aurora Perfumes Summer Launch 2025');
 
