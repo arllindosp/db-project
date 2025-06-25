@@ -15,11 +15,29 @@
         • Gabriel Correia     (gcb2)
         • Layla               (lbbs)
 =========================================================
-*/
 
+*/
+/*
+DROP TABLE participate CASCADE CONSTRAINTS;
+DROP TABLE production CASCADE CONSTRAINTS;
+DROP TABLE interrupt CASCADE CONSTRAINTS;
+DROP TABLE broadcast CASCADE CONSTRAINTS;
+DROP TABLE channel CASCADE CONSTRAINTS;
+DROP TABLE promote CASCADE CONSTRAINTS;
+DROP TABLE studio CASCADE CONSTRAINTS;
+DROP TABLE campaign CASCADE CONSTRAINTS;
+DROP TABLE advertiser CASCADE CONSTRAINTS;
+DROP TABLE advertisement CASCADE CONSTRAINTS;
+DROP TABLE episode CASCADE CONSTRAINTS;
+DROP TABLE season CASCADE CONSTRAINTS;
+DROP TABLE genre CASCADE CONSTRAINTS;
+DROP TABLE program CASCADE CONSTRAINTS;
+DROP TABLE content CASCADE CONSTRAINTS;
+DROP TABLE employee CASCADE CONSTRAINTS;
+DROP TABLE studio_address CASCADE CONSTRAINTS;
+*/
 CREATE TABLE program(
     id NUMBER,
-    number_of_seasons NUMBER,
     nome VARCHAR2(50),
     classifc_ind NUMBER,
     CONSTRAINT program_pkey PRIMARY KEY (id),
@@ -38,7 +56,6 @@ CREATE TABLE genre(
 CREATE TABLE season(
     id_program NUMBER,
     season_number NUMBER,
-    number_of_episodes NUMBER,
     season_status VARCHAR2(50),
     CONSTRAINT season_pkey PRIMARY KEY(id_program, season_number),
     CONSTRAINT season_program_fk FOREIGN KEY (id_program) REFERENCES program(id),

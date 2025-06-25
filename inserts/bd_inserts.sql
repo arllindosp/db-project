@@ -1,491 +1,244 @@
-/*
-=========================================================
-️🗳️ Inserts do Banco de Dados Emissora TV/Rádio - UFPE CIn 2025.1
+-- INSERINDO PROGRAMAS (NÃO INFORME O 'id' e NÃO USE number_of_seasons)
+INSERT INTO program (nome, classifc_ind) VALUES ('Café com Notícias', 10);
+INSERT INTO program (nome, classifc_ind) VALUES ('Brincando e Aprendendo', 0);
+INSERT INTO program (nome, classifc_ind) VALUES ('Segredos Urbanos', 14);          
+INSERT INTO program (nome, classifc_ind) VALUES ('Sabor em Família', 10);          
+INSERT INTO program (nome, classifc_ind) VALUES ('Show do Riso', 12);              
+INSERT INTO program (nome, classifc_ind) VALUES ('Noite de Mistério', 16);         
+INSERT INTO program (nome, classifc_ind) VALUES ('Debate em Foco', 12);            
+INSERT INTO program (nome, classifc_ind) VALUES ('Cinema Livre', 14);              
+INSERT INTO program (nome, classifc_ind) VALUES ('Mundo Animal', 0);               
+INSERT INTO program (nome, classifc_ind) VALUES ('Vidas Cruzadas', 18);
 
-Este script contém comandos INSERT para popular as tabelas
-do banco de dados com dados de exemplo para testes e validação.
-=========================================================
-*/
+--Gêneros dos programas
 
-DELETE FROM season WHERE id_program IN (SELECT id FROM program WHERE nome = 'Todo mundo odeia Pedro Moraes');
-DELETE FROM season WHERE id_program IN (SELECT id FROM program WHERE nome = 'Eu, pedro e as crianças');
-DELETE FROM episode
-WHERE id_program IN (
-    SELECT id FROM program WHERE nome = 'Todo mundo odeia Pedro Moraes'
-);
-DELETE FROM content WHERE content_title = 'Episódio Piloto'; -- ou outro título inserido
-DELETE FROM program WHERE nome = 'Todo mundo odeia Pedro Moraes';
-DELETE FROM program Where nome = 'Eu, pedro e as crianças';
-DELETE FROM season WHERE id_program IN (SELECT id FROM program WHERE nome = 'Todo mundo odeia Pedro Moraes');
-DELETE FROM program WHERE nome = 'Todo mundo odeia Pedro Moraes';
+-- Café com Notícias: Jornalismo
+INSERT INTO genre (program_id, nome) VALUES (1, 'Jornalismo');
 
+-- Brincando e Aprendendo: Infantil, Educativo
+INSERT INTO genre (program_id, nome) VALUES (2, 'Infantil');
+INSERT INTO genre (program_id, nome) VALUES (2, 'Educativo');
 
---  • Criando o programa
--- Programa 1: Série de comédia e terror
-INSERT INTO program (nome, classifc_ind) VALUES ('Todo mundo odeia Pedro Moraes', '10');
+-- Segredos Urbanos: Drama, Policial
+INSERT INTO genre (program_id, nome) VALUES (3, 'Drama');
+INSERT INTO genre (program_id, nome) VALUES (3, 'Policial');
 
---  • Insere os gêneros associados ao programa "Todo mundo odeia Pedro Moraes"
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'terror'
-FROM program
-WHERE nome = 'Todo mundo odeia Pedro Moraes';
+-- Sabor em Família: Culinária
+INSERT INTO genre (program_id, nome) VALUES (4, 'Culinária');
 
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'comédia'
-FROM program
-WHERE nome = 'Todo mundo odeia Pedro Moraes';
--- Programa 2: talk show
-INSERT INTO program (nome, classifc_ind) VALUES ('Conversa com André', '12');
---  • Insere os gêneros associados ao programa "Conversa com André"
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'talk show' FROM program WHERE nome = 'Conversa com André';
+-- Show do Riso: Humor
+INSERT INTO genre (program_id, nome) VALUES (5, 'Humor');
 
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'entretenimento' FROM program WHERE nome = 'Conversa com André';
--- Programa 3: Documentário
-INSERT INTO program (nome, classifc_ind) VALUES ('Natureza Brasileira', '10');
---  • Insere os gêneros associados ao programa "Natureza Brasileira"
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'documentário' FROM program WHERE nome = 'Natureza Brasileira';
+-- Noite de Mistério: Suspense, Policial
+INSERT INTO genre (program_id, nome) VALUES (6, 'Suspense');
+INSERT INTO genre (program_id, nome) VALUES (6, 'Policial');
 
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'educativo' FROM program WHERE nome = 'Natureza Brasileira';
--- PROGRAMA 4: Programa Infantil
-INSERT INTO program (nome, classifc_ind) VALUES ('Mundo das Crianças', 'L');
---  • Insere os gêneros associados ao programa "Mundo das Crianças"
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'infantil' FROM program WHERE nome = 'Mundo das Crianças';
+-- Debate em Foco: Debate, Atualidades
+INSERT INTO genre (program_id, nome) VALUES (7, 'Debate');
+INSERT INTO genre (program_id, nome) VALUES (7, 'Atualidades');
 
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'educativo' FROM program WHERE nome = 'Mundo das Crianças';
--- PROGRAMA 5: Telejornal
-INSERT INTO program (nome, classifc_ind) VALUES ('Jornal da Manhã', '10');
---  • Insere os gêneros associados ao programa "Jornal da Manhã"
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'jornalismo' FROM program WHERE nome = 'Jornal da Manhã';
+-- Cinema Livre: (sem gênero cadastrado)
 
-INSERT INTO genre (program_id, nome) 
-SELECT id, 'informativo' FROM program WHERE nome = 'Jornal da Manhã';
+-- Mundo Animal: Documentário, Natureza
+INSERT INTO genre (program_id, nome) VALUES (9, 'Documentário');
+INSERT INTO genre (program_id, nome) VALUES (9, 'Natureza');
 
+-- Vidas Cruzadas: Drama
+INSERT INTO genre (program_id, nome) VALUES (10, 'Drama');
 
--- Atualiza a tabela auxiliar season_copy com os dados atuais da tabela season.
--- Necessário para que a trigger de season utilize informações atualizadas e evite problemas de mutating table.
-TRUNCATE TABLE season_copy;
-INSERT INTO season_copy
-SELECT * FROM season;
+-- TEMPORADAS DOS PROGRAMAS
 
--- • Insere as temporadas associadas ao programa "Todo mundo odeia Pedro Moraes"
-INSERT INTO season (id_program, season_status)
-SELECT id, 'finished'
-FROM program
-WHERE nome = 'Todo mundo odeia Pedro Moraes';
+-- Café com Notícias: 2 temporadas
+INSERT INTO season (id_program, season_status) VALUES (1, 'finished');
+INSERT INTO season (id_program, season_status) VALUES (1, 'ongoing');
 
-TRUNCATE TABLE season_copy;
-INSERT INTO season_copy
-SELECT * FROM season;
+-- Brincando e Aprendendo: 1 temporada
+INSERT INTO season (id_program, season_status) VALUES (2, 'finished');
 
-INSERT INTO season (id_program, season_status)
-SELECT id, 'ongoing'
-FROM program
-WHERE nome = 'Todo mundo odeia Pedro Moraes';
+-- Segredos Urbanos: 3 temporadas
+INSERT INTO season (id_program, season_status) VALUES (3, 'finished');
+INSERT INTO season (id_program, season_status) VALUES (3, 'finished');
+INSERT INTO season (id_program, season_status) VALUES (3, 'ongoing');
 
--- • Insere as temporadas associadas ao programa ""Natureza Brasileira"
+-- Sabor em Família: 2 temporadas
+INSERT INTO season (id_program, season_status) VALUES (4, 'finished');
+INSERT INTO season (id_program, season_status) VALUES (4, 'ongoing');
 
-TRUNCATE TABLE season_copy;
-INSERT INTO season_copy SELECT * FROM season;
+-- Show do Riso: 1 temporada
+INSERT INTO season (id_program, season_status) VALUES (5, 'ongoing');
 
-INSERT INTO season (id_program, season_status)
-SELECT id, 'finished' FROM program WHERE nome = 'Natureza Brasileira';
+-- Noite de Mistério: 2 temporadas
+INSERT INTO season (id_program, season_status) VALUES (6, 'finished');
+INSERT INTO season (id_program, season_status) VALUES (6, 'ongoing');
 
--- • Insere os episódios associadas ao programa "Todo mundo odeia Pedro Moraes";
--- Episódio 1
-INSERT INTO content (content_duration,content_title) VALUES (45,'Episódio Piloto' );
-TRUNCATE TABLE episode_copy;
+-- Debate em Foco: Sem temporadas cadastradas
 
-DECLARE
-    v_content_id NUMBER;
-    v_id_program NUMBER;
-    v_season_number NUMBER;
+-- Cinema Livre: 1 temporada
+INSERT INTO season (id_program, season_status) VALUES (8, 'ongoing');
+
+-- Mundo Animal: 2 temporadas
+INSERT INTO season (id_program, season_status) VALUES (9, 'finished');
+INSERT INTO season (id_program, season_status) VALUES (9, 'ongoing');
+
+-- Vidas Cruzadas: 1 temporada
+INSERT INTO season (id_program, season_status) VALUES (10, 'ongoing');
+
+-- EPISÓDIOS DOS PROGRAMAS
+
+-- EPISÓDIOS (especialização de content)
+-- Café com Notícias (id_program = 1, temporadas 1 e 2, 5 episódios cada)
 BEGIN
-    SELECT content_seq.CURRVAL INTO v_content_id FROM DUAL;
-    SELECT s.id_program, s.season_number
-    INTO v_id_program, v_season_number
-    FROM season s
-    JOIN program p ON s.id_program = p.id
-    WHERE p.nome = 'Todo mundo odeia Pedro Moraes'
-      AND s.season_number = 1;
-
-    INSERT INTO episode_copy SELECT * FROM episode;
-
-    INSERT INTO episode(content_id, id_program, season_number)
-    VALUES (v_content_id, v_id_program, v_season_number);
-END;
-/
--- Episódio 2
-INSERT INTO content (content_duration, content_title) VALUES (44, 'Episódio 2: O Plano de Pedro');
-    TRUNCATE TABLE episode_copy;
-DECLARE
-    v_content_id NUMBER;
-    v_id_program NUMBER;
-    v_season_number NUMBER;
-BEGIN
-    SELECT content_seq.CURRVAL INTO v_content_id FROM DUAL;
-    SELECT s.id_program, s.season_number
-    INTO v_id_program, v_season_number
-    FROM season s
-    JOIN program p ON s.id_program = p.id
-    WHERE p.nome = 'Todo mundo odeia Pedro Moraes'
-      AND s.season_number = 1;
-
-    INSERT INTO episode_copy SELECT * FROM episode;
-
-    INSERT INTO episode(content_id, id_program, season_number)
-    VALUES (v_content_id, v_id_program, v_season_number);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 01', 1, 1);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 02', 1, 1);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 03', 1, 1);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 04', 1, 1);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 05', 1, 1);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 06', 1, 2);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 07', 1, 2);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 08', 1, 2);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 09', 1, 2);
+  insert_episode_content(1, 25, 'Café com Notícias - Edição 10', 1, 2);
 END;
 /
 
--- Episódio 3
-INSERT INTO content (content_duration, content_title) VALUES (46, 'Episódio 3: A Festa Surpresa');
-    TRUNCATE TABLE episode_copy;
-DECLARE
-    v_content_id NUMBER;
-    v_id_program NUMBER;
-    v_season_number NUMBER;
+-- Brincando e Aprendendo (id_program = 2, temporada 1)
 BEGIN
-    SELECT content_seq.CURRVAL INTO v_content_id FROM DUAL;
-    SELECT s.id_program, s.season_number
-    INTO v_id_program, v_season_number
-    FROM season s
-    JOIN program p ON s.id_program = p.id
-    WHERE p.nome = 'Todo mundo odeia Pedro Moraes'
-      AND s.season_number = 1;
-
-    INSERT INTO episode_copy SELECT * FROM episode;
-
-    INSERT INTO episode(content_id, id_program, season_number)
-    VALUES (v_content_id, v_id_program, v_season_number);
-END;
-/
--- EPISÓDIOS PARA OUTROS PROGRAMAS
--- Documentário - Natureza Brasileira
-INSERT INTO content (content_duration, content_title) VALUES (50, 'Amazônia: O Pulmão do Mundo');
-
-DECLARE
-    v_content_id NUMBER;
-    v_id_program NUMBER;
-    v_season_number NUMBER;
-BEGIN
-    SELECT content_seq.CURRVAL INTO v_content_id FROM DUAL;
-    SELECT s.id_program, s.season_number
-    INTO v_id_program, v_season_number
-    FROM season s
-    JOIN program p ON s.id_program = p.id
-    WHERE p.nome = 'Natureza Brasileira' AND s.season_number = 1;
-
-    TRUNCATE TABLE episode_copy;
-    INSERT INTO episode_copy SELECT * FROM episode;
-    
-    INSERT INTO episode(content_id, id_program, season_number)
-    VALUES (v_content_id, v_id_program, v_season_number);
-END;
-/
--- Programa de Talk Show (sem temporadas - programa único)
-INSERT INTO content (content_duration, content_title) VALUES (60, 'Conversa com André - Edição Especial');
--- Programa Infantil
-INSERT INTO content (content_duration, content_title) VALUES (30, 'Aprendendo as Cores');
--- Telejornal
-INSERT INTO content (content_duration, content_title) VALUES (90, 'Jornal da Manhã - Edição de Terça');
-
-/* ===========================
-   📢 CRIANDO ANÚNCIOS
-   =========================== */
-
--- 1. Cria um anunciante (advertiser)
--- Anunciante 1
-INSERT INTO advertiser (advertiser_name) VALUES ( 'Aurora Perfumes');
--- 2. Cria uma campanha (campaign)
-INSERT INTO campaign (campaign_description) VALUES ('Aurora Perfumes Summer Launch 2025');
-
--- 3. Cria um anúncio (advertisement) vinculado a um conteúdo
-INSERT INTO content (content_duration, content_title) VALUES ( 10, 'Lançamento Perfume Aurora - Sinta a Nova Essência');
-
-DECLARE
-    v_content_id NUMBER;
-BEGIN
-    SELECT c.content_id INTO v_content_id 
-    FROM content c
-    WHERE c.content_title = 'Lançamento Perfume Aurora - Sinta a Nova Essência';
-    INSERT INTO advertisement (content_id, target_audience) VALUES (v_content_id, 'Mulheres 18-35');
-END;
-/
-DECLARE
-    v_advertisement_id NUMBER;
-    v_advertiser_id NUMBER;
-    v_campaign_id NUMBER;
-
-BEGIN
-    SELECT c.campaign_id INTO v_campaign_id
-    FROM campaign c
-    WHERE c.campaign_description = 'Aurora Perfumes Summer Launch 2025';
-
-    SELECT a.advertiser_id INTO v_advertiser_id
-    FROM advertiser a
-    WHERE a.advertiser_name = 'Aurora Perfumes';
-
-    SELECT a.content_id INTO v_advertisement_id
-    FROM advertisement a
-    JOIN content c ON a.content_id = c.content_id
-    WHERE c.content_title = 'Lançamento Perfume Aurora - Sinta a Nova Essência';
-
--- 4. Relaciona anúncio, anunciante e campanha na promote
-    INSERT INTO promote (advertisement_id, advertiser_id, campaign_id) VALUES (v_advertisement_id,v_advertiser_id,v_campaign_id);
-    
+  insert_episode_content(1, 22, 'Brincando e Aprendendo - O Alfabeto', 2, 1);
+  insert_episode_content(1, 22, 'Brincando e Aprendendo - Números Divertidos', 2, 1);
+  insert_episode_content(1, 22, 'Brincando e Aprendendo - Animais do Brasil', 2, 1);
+  insert_episode_content(1, 22, 'Brincando e Aprendendo - Cores e Formas', 2, 1);
+  insert_episode_content(1, 22, 'Brincando e Aprendendo - Brincadeiras Tradicionais', 2, 1);
+  insert_episode_content(1, 22, 'Brincando e Aprendendo - Hora da Música', 2, 1);
 END;
 /
 
--- Esta constraint garante que toda tupla em advertisement deve estar associada a uma tupla existente em promote,
--- ou seja, todo anúncio deve obrigatoriamente participar da relação ternária (advertisement, advertiser, campaign).
--- Isso reforça a participação total de advertisement na relação promote.
-ALTER TABLE advertisement
-ADD CONSTRAINT advertisement_promote_fk 
-FOREIGN KEY (advertisement_id,advertiser_id,campaign_id)
-REFERENCES promote(advertisement_id,advertiser_id,campaign_id)
-DEFERRABLE INITIALLY DEFERRED;
-
-DECLARE
-    v_advertisement_id NUMBER;
-    v_advertiser_id NUMBER;
-    v_campaign_id NUMBER;
-
+-- Segredos Urbanos (id_program = 3, temporadas 1, 2 e 3)
 BEGIN
-    SELECT c.campaign_id INTO v_campaign_id
-    FROM campaign c
-    WHERE c.campaign_description = 'Aurora Perfumes Summer Launch 2025';
-
-    SELECT a.advertiser_id INTO v_advertiser_id
-    FROM advertiser a
-    WHERE a.advertiser_name = 'Aurora Perfumes';
-
-    SELECT a.content_id INTO v_advertisement_id
-    FROM advertisement a
-    JOIN content c ON a.content_id = c.content_id
-    WHERE c.content_title = 'Lançamento Perfume Aurora - Sinta a Nova Essência';
-
--- 4. Relaciona anúncio, anunciante e campanha na promote
-    INSERT INTO promote (advertisement_id, advertiser_id, campaign_id) VALUES (v_advertisement_id,v_advertiser_id,v_campaign_id);
-    
+  insert_episode_content(2, 45, 'Segredos Urbanos - O Caso da Rua 7', 3, 1);
+  insert_episode_content(2, 45, 'Segredos Urbanos - Mistério no Centro', 3, 1);
+  insert_episode_content(2, 45, 'Segredos Urbanos - O Enigma do Parque', 3, 2);
+  insert_episode_content(2, 45, 'Segredos Urbanos - Sombra na Estação', 3, 2);
+  insert_episode_content(2, 45, 'Segredos Urbanos - O Roubo do Século', 3, 3);
+  insert_episode_content(2, 45, 'Segredos Urbanos - Testemunha Ocular', 3, 3);
+  insert_episode_content(2, 45, 'Segredos Urbanos - O Mistério do Cofre', 3, 3);
+  insert_episode_content(2, 45, 'Segredos Urbanos - Fuga na Madrugada', 3, 3);
 END;
 /
 
--- Atualiza os campos de chave estrangeira em advertisement para garantir participação total na relação ternária promote
-UPDATE advertisement a
-SET (a.advertisement_id, a.advertiser_id, a.campaign_id) = (
-    SELECT p.advertisement_id, p.advertiser_id, p.campaign_id
-    FROM promote p
-    WHERE p.advertisement_id = a.content_id
-)
-WHERE EXISTS (
-    SELECT 1 FROM promote p WHERE p.advertisement_id = a.content_id
-);
-
--- Insere o canal "Canal Globix" com frequência 101 e cria uma transmissão (broadcast)
--- do episódio "Episódio Piloto" nesse canal, das 20:00 às 21:00, para 10.000 espectadores.
-INSERT INTO channel (frequency, channel_name) VALUES (101, 'Canal Globix');
-
-DECLARE
-    v_episode_content_id NUMBER;
+-- Sabor em Família (id_program = 4, temporadas 1 e 2)
 BEGIN
-    SELECT e.content_id
-    INTO v_episode_content_id
-    FROM episode e
-    JOIN content c ON e.content_id = c.content_id
-    WHERE c.content_title = 'Episódio Piloto';
-
-    INSERT INTO broadcast (
-        channel_frequency, content_id, broadcast_begin_time, broadcast_end_time, reach_audience
-    ) VALUES (
-        101, v_episode_content_id,
-        TO_TIMESTAMP('2025-07-01 20:00:00', 'YYYY-MM-DD HH24:MI:SS'),
-        TO_TIMESTAMP('2025-07-01 21:00:00', 'YYYY-MM-DD HH24:MI:SS'),
-        10000
-    );
+  insert_episode_content(1, 30, 'Sabor em Família - Receitas de Domingo', 4, 1);
+  insert_episode_content(1, 30, 'Sabor em Família - Sabores do Nordeste', 4, 1);
+  insert_episode_content(1, 30, 'Sabor em Família - Doces Caseiros', 4, 2);
+  insert_episode_content(1, 30, 'Sabor em Família - Pratos Rápidos', 4, 2);
+  insert_episode_content(1, 30, 'Sabor em Família - Especial de Natal', 4, 2);
 END;
 /
 
-DECLARE
-    v_episode_content_id NUMBER;
-    v_advertisement_content_id NUMBER;
+-- Show do Riso (id_program = 5, temporada 1)
 BEGIN
-    -- Get the content_id of the episode being broadcast
-    SELECT e.content_id
-    INTO v_episode_content_id
-    FROM episode e
-    JOIN content c ON e.content_id = c.content_id
-    WHERE c.content_title = 'Episódio Piloto';
-
-    -- Get the content_id of the advertisement
-    SELECT c.content_id
-    INTO v_advertisement_content_id
-    FROM advertisement a
-    JOIN content c ON a.content_id = c.content_id
-    WHERE c.content_title = 'Lançamento Perfume Aurora - Sinta a Nova Essência';
-
-    -- Insert the interruption
-    INSERT INTO interrupt (
-        content_id, channel_frequency, advertisement_id, interruption_time
-    ) VALUES (
-        v_episode_content_id,
-        101,
-        v_advertisement_content_id,
-        TO_TIMESTAMP('2025-07-01 20:30:00', 'YYYY-MM-DD HH24:MI:SS')
-    );
+  insert_episode_content(1, 28, 'Show do Riso - Stand Up 1', 5, 1);
+  insert_episode_content(1, 28, 'Show do Riso - Stand Up 2', 5, 1);
+  insert_episode_content(1, 28, 'Show do Riso - Esquetes Inéditas', 5, 1);
+  insert_episode_content(1, 28, 'Show do Riso - Melhores Piadas', 5, 1);
 END;
 /
 
--- Sub-supervisor 1
-INSERT INTO employee (employee_salary, employee_name) VALUES ( 7000, 'Maria Oliveira');
-
-DECLARE 
-    v_supervisor_id NUMBER;
+-- Noite de Mistério (id_program = 6, temporadas 1 e 2)
 BEGIN
-    SELECT e.employee_id INTO  v_supervisor_id 
-    FROM EMPLOYEE e
-    WHERE e.EMPLOYEE_NAME = 'Maria Oliveira' ;
-
- -- Funcionários subordinados a Maria Oliveira
-INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3500, 'João Silva', v_supervisor_id );
-INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3600, 'Ana Costa',  v_supervisor_id );
-INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3400, 'Lucas Pereira',  v_supervisor_id );
-INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3550, 'Fernanda Souza',  v_supervisor_id );
+  insert_episode_content(2, 50, 'Noite de Mistério - O Visitante', 6, 1);
+  insert_episode_content(2, 50, 'Noite de Mistério - O Quadro', 6, 1);
+  insert_episode_content(2, 50, 'Noite de Mistério - O Elevador', 6, 1);
+  insert_episode_content(2, 50, 'Noite de Mistério - O Sótão', 6, 2);
+  insert_episode_content(2, 50, 'Noite de Mistério - O Apartamento 13', 6, 2);
+  insert_episode_content(2, 50, 'Noite de Mistério - O Último Trem', 6, 2);
 END;
 /
 
--- Sub-supervisor 2
-INSERT INTO employee (employee_salary, employee_name) VALUES (7200, 'Carlos Mendes');
-
-DECLARE 
-    v_supervisor_id NUMBER;
+-- Cinema Livre (id_program = 8, temporada 1)
 BEGIN
-    SELECT e.employee_id INTO  v_supervisor_id 
-    FROM EMPLOYEE e
-    WHERE e.EMPLOYEE_NAME = 'Carlos Mendes' ;
-
-    
--- Funcionários subordinados a Carlos Mendes
-INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3300, 'Patrícia Lima', v_supervisor_id);
-INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3450, 'Rafael Barbosa', v_supervisor_id);
-INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3250, 'Juliana Martins',  v_supervisor_id);
-INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3350, 'Bruno Almeida',  v_supervisor_id);
+  insert_episode_content(1, 90, 'Cinema Livre - Filme Nacional', 8, 1);
+  insert_episode_content(1, 95, 'Cinema Livre - Clássico Internacional', 8, 1);
 END;
 /
 
--- Sub-supervisor 3
-INSERT INTO employee (employee_salary, employee_name) VALUES (6500, 'Gabriel Ramos');
-
-DECLARE
-    v_supervisor_id NUMBER;
+-- Mundo Animal (id_program = 9, temporadas 1 e 2)
 BEGIN
-    SELECT e.employee_id INTO v_supervisor_id
-    FROM employee e
-    WHERE e.employee_name = 'Gabriel Ramos';
-
-    -- Funcionários subordinados a Gabriel Ramos
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3200, 'Mariana Duarte', v_supervisor_id);
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3100, 'Thiago Moreira', v_supervisor_id);
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3150, 'Camila Rocha', v_supervisor_id);
+  insert_episode_content(1, 35, 'Mundo Animal - Floresta Amazônica', 9, 1);
+  insert_episode_content(1, 35, 'Mundo Animal - Pantanal Selvagem', 9, 1);
+  insert_episode_content(1, 35, 'Mundo Animal - Vida Marinha', 9, 2);
+  insert_episode_content(1, 35, 'Mundo Animal - Cerrado Brasileiro', 9, 2);
 END;
 /
 
--- Sub-supervisor 4
-INSERT INTO employee (employee_salary, employee_name) VALUES (6600, 'Eduardo Teixeira');
-
-DECLARE
-    v_supervisor_id NUMBER;
+-- Vidas Cruzadas (id_program = 10, temporada 1)
 BEGIN
-    SELECT e.employee_id INTO v_supervisor_id
-    FROM employee e
-    WHERE e.employee_name = 'Eduardo Teixeira';
-
-    -- Funcionários subordinados a Eduardo Teixeira
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3250, 'Larissa Fernandes', v_supervisor_id);
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3350, 'Vinícius Cardoso', v_supervisor_id);
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3300, 'Paula Ribeiro', v_supervisor_id);
+  insert_episode_content(2, 55, 'Vidas Cruzadas - Destinos', 10, 1);
+  insert_episode_content(2, 55, 'Vidas Cruzadas - Reencontros', 10, 1);
 END;
 /
 
--- Sub-supervisor 5
-INSERT INTO employee (employee_salary, employee_name) VALUES (6700, 'Renata Martins');
+-- INSERINDO ANUNCIANTES VARIADOS
+INSERT INTO advertiser (advertiser_name) VALUES ('Aurora Cosméticos');
+INSERT INTO advertiser (advertiser_name) VALUES ('Supermercado Preço Bom');
+INSERT INTO advertiser (advertiser_name) VALUES ('AutoCar Veículos');
+INSERT INTO advertiser (advertiser_name) VALUES ('TechX Eletrônicos');
+INSERT INTO advertiser (advertiser_name) VALUES ('Mundo Pet');
+INSERT INTO advertiser (advertiser_name) VALUES ('Editora Saber');
+INSERT INTO advertiser (advertiser_name) VALUES ('Farmácia Popular');
+INSERT INTO advertiser (advertiser_name) VALUES ('Sorvetes Geladinho');
 
-DECLARE
-    v_supervisor_id NUMBER;
+-- INSERINDO CAMPANHAS VARIADAS
+INSERT INTO campaign (campaign_name, campaign_description) VALUES ('Beleza de Verão', 'Campanha de verão com foco em beleza e bem-estar');
+INSERT INTO campaign (campaign_name, campaign_description) VALUES ('Ofertas da Semana', 'Campanha semanal de promoções');
+INSERT INTO campaign (campaign_name, campaign_description) VALUES ('Feirão de Carros', 'Campanha de vendas de automóveis');
+INSERT INTO campaign (campaign_name, campaign_description) VALUES ('TechX Lançamento', 'Campanha de lançamento de eletrônicos');
+INSERT INTO campaign (campaign_name, campaign_description) VALUES ('Promoção Pet Feliz', 'Campanha para produtos pet');
+INSERT INTO campaign (campaign_name, campaign_description) VALUES ('Verão em Família', 'Campanha colaborativa de verão');
+INSERT INTO campaign (campaign_name, campaign_description) VALUES ('Verão Refrescante', 'Campanha colaborativa de sorvetes');
+
+-- INSERINDO ANÚNCIOS VARIADOS (usando a procedure insert_advertisement_content)
 BEGIN
-    SELECT e.employee_id INTO v_supervisor_id
-    FROM employee e
-    WHERE e.employee_name = 'Renata Martins';
-
-    -- Funcionários subordinados a Renata Martins
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3400, 'Felipe Souza', v_supervisor_id);
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3450, 'Bruna Lima', v_supervisor_id);
-    INSERT INTO employee (employee_salary, employee_name, employee_supervisor) VALUES (3350, 'Diego Alves', v_supervisor_id);
+  insert_advertisement_content(1, 2, 'Comercial Perfume Aurora', 'Adultos');         -- content_id 1
+  insert_advertisement_content(1, 3, 'Comercial Supermercado Preço Bom', 'Família'); -- content_id 2
+  insert_advertisement_content(0, 2, 'Comercial Carro Novo', 'Adultos');             -- content_id 3
+  insert_advertisement_content(1, 2, 'Comercial Celular TechX', 'Jovens');           -- content_id 4
+  insert_advertisement_content(0, 2, 'Comercial Pet Feliz', 'Todos');                -- content_id 5
+  insert_advertisement_content(0, 2, 'Comercial Editora Saber', 'Estudantes');       -- content_id 6
+  insert_advertisement_content(1, 2, 'Comercial Farmácia Popular', 'Idosos');        -- content_id 7
+  insert_advertisement_content(1, 2, 'Comercial Sorvetes Geladinho', 'Crianças');    -- content_id 8
 END;
-/
 
--- Cria o super supervisor
-INSERT INTO employee (employee_salary, employee_name) VALUES (9000, 'Roberto Figueiredo');
+-- PROMOTE: vincula anúncio, anunciante e campanha, com orçamento variado
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (48, 1, 1, 6000); -- Perfume Aurora solo
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (48, 1, 6, 4000); -- Perfume Aurora colab
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (48, 2, 6, 3000); -- Perfume Aurora colab
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (48, 8, 6, 2000); -- Perfume Aurora colab
 
-DECLARE
-    v_super_supervisor_id NUMBER;
-BEGIN
-    SELECT e.employee_id INTO v_super_supervisor_id
-    FROM employee e
-    WHERE e.employee_name = 'Roberto Figueiredo';
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (49, 2, 2, 7000); -- Supermercado Preço Bom solo
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (49, 2, 10, 3500); -- Supermercado Preço Bom colab
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (49, 8, 10, 2500); -- Supermercado Preço Bom colab
 
-    -- Atualiza todos os sub-supervisores para serem supervisionados por Roberto Figueiredo
-    UPDATE employee
-    SET employee_supervisor = v_super_supervisor_id
-    WHERE employee_name IN (
-        'Maria Oliveira',
-        'Carlos Mendes',
-        'Gabriel Ramos',
-        'Eduardo Teixeira',
-        'Renata Martins'
-    );
-END;
-/
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (50, 3, 3, 8000); -- Carro Novo solo
 
--- 1. Insere um endereço para o estúdio
-INSERT INTO studio_address (neighborhood, street, address_numb)
-VALUES ('Centro', 'Rua das Artes', 123);
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (51, 4, 4, 9000); -- Celular TechX solo
 
--- 2. Insere o estúdio
-INSERT INTO studio (studio_capacity, maintenance_cost, address_id)
-VALUES (200, 8000, 20);
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (52, 5, 5, 4000); -- Pet Feliz solo
 
--- 3. Cria um conteúdo para a produção
-INSERT INTO content (content_duration, content_title)
-VALUES (90, 'Making Of: Bastidores do Sucesso');
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (54, 7, 9, 3500); -- Farmácia Popular solo
 
--- 4. Insere a produção no estúdio
-INSERT INTO production (studio_id, content_id, production_begin, production_end)
-SELECT
-    (SELECT studio_id FROM studio WHERE studio_capacity = 200 AND maintenance_cost = 8000 AND address_id = 20),
-    (SELECT content_id FROM content WHERE content_title = 'Making Of: Bastidores do Sucesso'),
-    TO_TIMESTAMP('2025-08-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS'),
-    TO_TIMESTAMP('2025-08-05 18:00:00', 'YYYY-MM-DD HH24:MI:SS')
-FROM dual;
--- 5. Insere a equipe de produção
-INSERT INTO participate (
-    employee_id, studio_id, content_id, role, participation_begin, participation_end
-)
-SELECT
-    (SELECT employee_id FROM employee WHERE employee_name = 'Renata Martins'),
-    p.studio_id,
-    p.content_id,
-    'Produtor',
-    TO_TIMESTAMP('2025-08-01 09:00:00', 'YYYY-MM-DD HH24:MI:SS'),
-    TO_TIMESTAMP('2025-08-05 18:00:00', 'YYYY-MM-DD HH24:MI:SS')
-FROM production p
-WHERE p.studio_id = (SELECT studio_id FROM studio WHERE studio_capacity = 200 AND maintenance_cost = 8000 AND address_id = 20)
-  AND p.content_id = (SELECT content_id FROM content WHERE content_title = 'Episódio 3: A Festa Surpresa');
-
-SELECT * from content;
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (55, 8, 10, 5000); -- Sorvetes Geladinho solo
+INSERT INTO promote (advertisement_id, advertiser_id, campaign_id, promotion_budget)
+VALUES (56, 2, 10, 2000); -- Sorvetes Geladinho colab

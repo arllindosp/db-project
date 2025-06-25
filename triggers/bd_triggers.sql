@@ -19,34 +19,61 @@ BEGIN
     FROM DUAL;
 END;
 /
+
 CREATE OR REPLACE TRIGGER trg_auto_season_number
 BEFORE INSERT ON season
 FOR EACH ROW
 DECLARE
   v_next_number NUMBER;
 BEGIN
-  SELECT NVL(MAX(season_number), 0) + 1
+  SELECT COUNT(*) + 1
   INTO v_next_number
-  FROM season_copy
+  FROM season
   WHERE id_program = :NEW.id_program;
-
   :NEW.season_number := v_next_number;
 END;
 /
+
+CREATE OR REPLACE TRIGGER trg_enforce_season_status
+BEFORE INSERT ON season
+FOR EACH ROW
+DECLARE
+  v_season_status VARCHAR2(50);
+BEGIN
+  BEGIN
+    SELECT s1.season_status
+    INTO v_season_status
+    FROM season s1
+    WHERE s1.season_number = 
+      (SELECT MAX(season_number)
+       FROM season s2
+       WHERE s1.id_program = s2.id_program)
+      AND s1.id_program = :NEW.id_program;
+    IF v_season_status = 'ongoing' THEN
+      RAISE_APPLICATION_ERROR(-20001, 'Cannot insert a new season while the last one is ongoing.');
+    END IF;
+  EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+      NULL; -- Não faz nada se não existe temporada anterior
+  END;
+END;
+/
+
 CREATE OR REPLACE TRIGGER trg_auto_ep_number
 BEFORE INSERT ON episode
 FOR EACH ROW
-DECLARE
+DECLARE 
   v_next_number NUMBER;
 BEGIN
-  SELECT NVL(MAX(episode_number), 0) + 1
+  SELECT COUNT(*) + 1
   INTO v_next_number
-  FROM episode_copy
-  WHERE id_program = :NEW.id_program;
-
+  FROM episode
+  WHERE season_number = :NEW.season_number
+  AND id_program = :NEW.id_program;
   :NEW.episode_number := v_next_number;
 END;
 /
+
 CREATE OR REPLACE TRIGGER trg_content_id
 BEFORE INSERT ON content
 FOR EACH ROW

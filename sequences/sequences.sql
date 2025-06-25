@@ -7,6 +7,13 @@ de chaves primárias e identificadores únicos nas tabelas do banco.
 =========================================================
 */
 
+DROP SEQUENCE program_seq;
+DROP SEQUENCE content_seq;
+DROP SEQUENCE advertiser_seq;
+DROP SEQUENCE campaign_seq;
+DROP SEQUENCE address_seq;
+DROP SEQUENCE studio_seq;
+DROP SEQUENCE employee_seq;
 /* ===========================
    program_seq: IDs para tabela program
    =========================== */
@@ -14,7 +21,7 @@ CREATE SEQUENCE program_seq
 START WITH 1
 INCREMENT BY 1
 NOCACHE
-CYCLE;
+NOCYCLE;
 
 
 /* ===========================
