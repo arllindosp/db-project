@@ -113,3 +113,22 @@ BEGIN
     END IF;
 END;
 /
+
+CREATE OR REPLACE TRIGGER trg_address_id
+BEFORE INSERT ON studio_address
+FOR EACH ROW
+BEGIN
+    IF :NEW.address_id IS NULL THEN
+        SELECT address_seq.NEXTVAL INTO :NEW.address_id FROM dual;
+    END IF;
+END;
+/
+CREATE OR REPLACE TRIGGER trg_studio_id
+BEFORE INSERT ON studio
+FOR EACH ROW
+BEGIN
+    IF :NEW.studio_id IS NULL THEN
+        SELECT studio_seq.NEXTVAL INTO :NEW.studio_id FROM dual;
+    END IF;
+END;
+/

@@ -17,7 +17,7 @@
 =========================================================
 
 */
-/*
+
 DROP TABLE participate CASCADE CONSTRAINTS;
 DROP TABLE production CASCADE CONSTRAINTS;
 DROP TABLE interrupt CASCADE CONSTRAINTS;
@@ -35,7 +35,7 @@ DROP TABLE program CASCADE CONSTRAINTS;
 DROP TABLE content CASCADE CONSTRAINTS;
 DROP TABLE employee CASCADE CONSTRAINTS;
 DROP TABLE studio_address CASCADE CONSTRAINTS;
-*/
+
 CREATE TABLE program(
     id NUMBER,
     nome VARCHAR2(50),
@@ -180,7 +180,7 @@ CREATE TABLE interrupt(
     channel_frequency NUMBER,
     advertisement_id NUMBER,
     interruption_time TIMESTAMP,
-    CONSTRAINT interrupt_pk PRIMARY KEY(content_id, channel_frequency, advertisement_id),
+    CONSTRAINT interrupt_pk PRIMARY KEY(content_id, channel_frequency, advertisement_id, interruption_time),
     CONSTRAINT interrupt_broadcast_fk FOREIGN KEY(channel_frequency, content_id) REFERENCES broadcast(channel_frequency, content_id),
     CONSTRAINT interrupt_advertisement_fk FOREIGN KEY(advertisement_id) REFERENCES advertisement(advertisement_id),
     CONSTRAINT interrupt_time_nn CHECK(interruption_time IS NOT NULL)
