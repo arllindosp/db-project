@@ -20,6 +20,13 @@ BEGIN
 END;
 /
 
+/* ===========================
+   trg_auto_season_number: Numera automaticamente as temporadas de cada programa
+   - Executa ANTES do INSERT na tabela season
+   - Conta quantas temporadas já existem para o programa
+   - Atribui o próximo número sequencial (1, 2, 3...)
+   - Garante numeração contínua por programa
+   =========================== */
 CREATE OR REPLACE TRIGGER trg_auto_season_number
 BEFORE INSERT ON season
 FOR EACH ROW
@@ -34,6 +41,14 @@ BEGIN
 END;
 /
 
+
+/* ===========================
+   trg_enforce_season_status: Impede criação de nova temporada se a última estiver em andamento
+   - Executa ANTES do INSERT na tabela season
+   - Verifica se a temporada mais recente do programa está 'ongoing'
+   - Bloqueia inserção se houver conflito de status
+   - Garante que apenas uma temporada por programa esteja ativa
+   =========================== */
 CREATE OR REPLACE TRIGGER trg_enforce_season_status
 BEFORE INSERT ON season
 FOR EACH ROW
@@ -59,6 +74,13 @@ BEGIN
 END;
 /
 
+/* ===========================
+   trg_auto_ep_number: Numera automaticamente os episódios dentro de cada temporada
+   - Executa ANTES do INSERT na tabela episode
+   - Conta episódios existentes na mesma temporada e programa
+   - Atribui numeração sequencial (1, 2, 3...) por temporada
+   - Garante ordem correta dos episódios
+   =========================== */
 CREATE OR REPLACE TRIGGER trg_auto_ep_number
 BEFORE INSERT ON episode
 FOR EACH ROW
@@ -74,6 +96,13 @@ BEGIN
 END;
 /
 
+/* ===========================
+   trg_content_id: Gera ID único para todo tipo de conteúdo (episódios e anúncios)
+   - Executa ANTES do INSERT na tabela content
+   - Utiliza sequence content_seq para IDs únicos
+   - Aplica-se tanto para episódios quanto anúncios
+   - Garante chave primária sempre preenchida
+   =========================== */
 CREATE OR REPLACE TRIGGER trg_content_id
 BEFORE INSERT ON content
 FOR EACH ROW
@@ -83,6 +112,14 @@ BEGIN
     FROM DUAL;
 END;
 /
+
+/* ===========================
+   trg_advertiser_id: Gera ID sequencial para anunciantes (se não informado)
+   - Executa ANTES do INSERT na tabela advertiser
+   - Verifica se ID não foi fornecido manualmente
+   - Utiliza sequence advertiser_seq como fallback
+   - Permite flexibilidade na inserção de dados
+   =========================== */
 
 CREATE OR REPLACE TRIGGER trg_advertiser_id
 BEFORE INSERT ON advertiser
@@ -94,6 +131,14 @@ BEGIN
 END;
 /
 
+/* ===========================
+   trg_campaign_id: Gera ID sequencial para campanhas publicitárias (se não informado)
+   - Executa ANTES do INSERT na tabela campaign
+   - Verifica se ID não foi fornecido manualmente
+   - Utiliza sequence campaign_seq como fallback
+   - Facilita inserção sem necessidade de calcular IDs
+   =========================== */
+
 CREATE OR REPLACE TRIGGER trg_campaign_id
 BEFORE INSERT ON campaign
 FOR EACH ROW
@@ -104,6 +149,13 @@ BEGIN
 END;
 /
 
+/* ===========================
+   trg_employee_id: Gera ID sequencial para funcionários (se não informado)
+   - Executa ANTES do INSERT na tabela employee
+   - Verifica se ID não foi fornecido manualmente
+   - Utiliza sequence employee_seq como fallback
+   - Garante consistência nos IDs de funcionários
+   =========================== */
 CREATE OR REPLACE TRIGGER trg_employee_id
 BEFORE INSERT ON employee
 FOR EACH ROW
@@ -114,6 +166,13 @@ BEGIN
 END;
 /
 
+/* ===========================
+   trg_address_id: Gera ID sequencial para endereços (se não informado)
+   - Executa ANTES do INSERT na tabela studio_address
+   - Verifica se ID não foi fornecido manualmente
+   - Utiliza sequence address_seq como fallback
+   - Facilita inserção de endereços sem necessidade de calcular IDs
+   =========================== */
 CREATE OR REPLACE TRIGGER trg_address_id
 BEFORE INSERT ON studio_address
 FOR EACH ROW
@@ -123,6 +182,15 @@ BEGIN
     END IF;
 END;
 /
+
+/* ===========================
+   trg_studio_id: Gera ID sequencial para estúdios (se não informado)
+   - Executa ANTES do INSERT na tabela studio
+   - Verifica se ID não foi fornecido manualmente
+   - Utiliza sequence studio_seq como fallback
+   - Facilita cadastro de novos estúdios de produção
+   =========================== */
+   
 CREATE OR REPLACE TRIGGER trg_studio_id
 BEFORE INSERT ON studio
 FOR EACH ROW

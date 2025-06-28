@@ -1,3 +1,43 @@
+/*
+=========================================================
+🎬📺 POVOAMENTO DE DADOS - Banco de Dados Emissora TV/Rádio - UFPE CIn 2025.1
+
+Este script contém todas as inserções de dados necessárias para popular
+o banco de dados com informações realistas de programas, episódios,
+anúncios, funcionários, estúdios e exibições da emissora.
+
+🎯 Inclui:
+  • 📋 Programas de TV e seus gêneros
+  • 🎭 Temporadas e episódios
+  • 📢 Anúncios e campanhas publicitárias
+  • 👥 Funcionários em estrutura hierárquica
+  • 🏢 Estúdios de produção
+  • 📡 Canais e transmissões
+  • 🎬 Participações e produções
+=========================================================
+*/
+-- LIMPEZA TOTAL DAS TABELAS
+
+DELETE FROM interrupt;
+DELETE FROM broadcast;
+DELETE FROM participate;
+DELETE FROM production;
+DELETE FROM promote;
+DELETE FROM employee;
+DELETE FROM employee ;
+DELETE FROM studio;
+DELETE FROM studio_address;
+DELETE FROM campaign;
+DELETE FROM advertiser;
+DELETE FROM channel;
+DELETE FROM advertisement;
+DELETE FROM episode;
+DELETE FROM content;
+DELETE FROM season;
+DELETE FROM genre;
+DELETE FROM program;
+
+
 -- INSERINDO PROGRAMAS (NÃO INFORME O 'id' e NÃO USE number_of_seasons)
 INSERT INTO program (nome, classifc_ind) VALUES ('Café com Notícias', 10);
 INSERT INTO program (nome, classifc_ind) VALUES ('Brincando e Aprendendo', 0);
@@ -9,6 +49,7 @@ INSERT INTO program (nome, classifc_ind) VALUES ('Debate em Foco', 12);
 INSERT INTO program (nome, classifc_ind) VALUES ('Cinema Livre', 14);              
 INSERT INTO program (nome, classifc_ind) VALUES ('Mundo Animal', 0);               
 INSERT INTO program (nome, classifc_ind) VALUES ('Vidas Cruzadas', 18);
+
 
 --Gêneros dos programas
 
@@ -228,6 +269,7 @@ BEGIN
   insert_advertisement_content(1, 5, 'Financiamento Especial AutoFácil', 'Adultos');
   insert_advertisement_content(0, 1.5, 'liquidação de Frutas e Verduras BomLar', 'Famílias');
 END;
+/
 -- RELACIONANDO ANÚNCIOS, ANUNCIANTES E CAMPANHAS (PROMOTE) 
 
 -- Farmácias VidaPlena promovendo protetor solar em "Beleza de Verão"
