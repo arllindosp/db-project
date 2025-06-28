@@ -189,6 +189,6 @@ SELECT sequence_name, last_number FROM user_sequences;
 
 ## 📌 Status
 
-- **Status:** ✅ Projeto concluído e testado  
+- **Status:** Em desenvolvimento 
 - **Versão:** 1.0  
 - **Data:** Junho 2025
