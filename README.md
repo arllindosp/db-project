@@ -11,8 +11,9 @@ Sistema de gerenciamento completo para emissoras de televisão e rádio desenvol
 - **Arlindo** (apsj)  
 - **Marcus Vinícius** (mvsl2)  
 - **Gabriel Correia** (gcb2)  
-- **Layla** (lbbs)
 - **Aline Acioly** (aan4)
+- **Layla** (lbbs)
+
 
 
 **Instituição:** Universidade Federal de Pernambuco (UFPE) - Centro de Informática  
