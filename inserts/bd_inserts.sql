@@ -37,7 +37,6 @@ DELETE FROM season;
 DELETE FROM genre;
 DELETE FROM program;
 
-
 -- INSERINDO PROGRAMAS (NÃO INFORME O 'id' e NÃO USE number_of_seasons)
 INSERT INTO program (nome, classifc_ind) VALUES ('Café com Notícias', 10);
 INSERT INTO program (nome, classifc_ind) VALUES ('Brincando e Aprendendo', 0);
