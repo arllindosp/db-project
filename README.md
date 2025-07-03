@@ -1,4 +1,4 @@
-# 📺 Banco de Dados Emissora TV/Rádio
+# 📦 Banco de Dados Emissora TV/Rádio
 
 Sistema de gerenciamento completo para emissoras de televisão e rádio desenvolvido em Oracle Database.
 
