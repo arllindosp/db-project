@@ -14,8 +14,6 @@ Sistema de gerenciamento completo para emissoras de televisão e rádio desenvol
 - **Aline Acioly** (aan4)
 - **Layla** (lbbs)
 
-
-
 **Instituição:** Universidade Federal de Pernambuco (UFPE) - Centro de Informática  
 **Disciplina:** Banco de Dados - 2025.1
 
@@ -45,8 +43,11 @@ db-project/
 │   └── procedures.sql
 ├── triggers/          # Triggers de automação e validação
 │   └── bd_triggers.sql
-└── inserts/           # Povoamento completo do banco
-    └── bd_inserts.sql
+├── inserts/           # Povoamento completo do banco
+│   └── bd_inserts.sql
+└── sql_pl/            # Programação PL/SQL avançada
+    ├── pl_checklist.sql    # Checklist completo PL/SQL
+    └── sql_checklist.sql   # Comandos SQL essenciais
 ```
 
 ---
@@ -72,6 +73,10 @@ Execute os scripts na seguinte ordem para garantir que todas as dependências se
 
 -- 5. Popular o banco com dados
 @inserts/bd_inserts.sql
+
+-- 6. (Opcional) Executar exemplos PL/SQL
+@sql_pl/pl_checklist.sql
+@sql_pl/sql_checklist.sql
 ```
 
 ---
@@ -132,7 +137,7 @@ LEFT JOIN employee s ON e.employee_supervisor = s.employee_id;
 
 ```sql
 -- Deve falhar – classificação inválida
-INSERT INTO program (nome, classific_ind) VALUES ('Teste Erro', 99);
+INSERT INTO program (nome, classifc_ind) VALUES ('Teste Erro', 99);
 
 -- Deve falhar – referência inexistente
 INSERT INTO episode (content_id, id_program, season_number)
@@ -150,17 +155,51 @@ SELECT sequence_name, last_number FROM user_sequences;
 ## 🎯 Funcionalidades Principais
 
 ### Gestão de Programas
-- ✅ Criação automática de IDs via sequences
-- ✅ Controle de temporadas (ongoing/finished)
-- ✅ Numeração automática de episódios
-- ✅ Múltiplos gêneros por programa
+- 🟪 Criação automática de IDs via sequences
+- 🟪 Controle de temporadas (ongoing/finished)
+- 🟪 Numeração automática de episódios
+- 🟪 Múltiplos gêneros por programa
 
 ### Sistema Publicitário
-- ✅ Relacionamento anunciantes-campanhas-anúncios
+- 🟪 Relacionamento anunciantes-campanhas-anúncios
+- 🟪 Controle de orçamento e público-alvo
+- 🟪 Interrupções programadas durante transmissões
+
+### Recursos Humanos
+- 🟪 Estrutura hierárquica de funcionários
+- 🟪 Participação em produções com controle de funções
+- 🟪 Validação automática de dados via triggers
+
+### Produção de Conteúdo
+- 🟪 Gestão de estúdios e endereços
+- 🟪 Controle de custos e cronogramas
+- 🟪 Relacionamento produção-participação
 
 ---
 
-## 📊 Estatísticas do Banco
+## 💡 Programação PL/SQL
+
+O projeto inclui exemplos abrangentes de programação PL/SQL:
+
+### pl_checklist.sql
+- **Records e Collections**: Tipos customizados para dados complexos
+- **Functions e Procedures**: Cálculos de receita e estatísticas
+- **Packages**: Organização modular do código
+- **Cursors Explícitos**: Controle manual com OPEN/FETCH/CLOSE
+- **Triggers de Comando**: Logs automáticos de operações
+- **Exception Handling**: Tratamento robusto de erros
+
+### sql_checklist.sql
+- **26 Comandos SQL**: Desde ALTER TABLE até CREATE VIEW
+- **JOINs Avançados**: INNER, LEFT, RIGHT, FULL OUTER
+- **Subconsultas**: Com operadores relacionais, IN, ANY, ALL
+- **Funções Agregadas**: MAX, MIN, AVG, COUNT
+- **Agrupamento**: GROUP BY e HAVING
+- **Operações de Conjunto**: UNION, INTERSECT, MINUS
+
+---
+
+## 📋  Estatísticas do Banco
 
 - 17 Tabelas inter-relacionadas  
 - 25 Funcionários em estrutura hierárquica  
@@ -173,11 +212,11 @@ SELECT sequence_name, last_number FROM user_sequences;
 
 ---
 
-## ⚙️ Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
 - **Oracle Database** – Sistema de gerenciamento de banco de dados  
-- **PL/SQL** – Procedures, triggers e blocos anônimos  
-- **SQL** – Linguagem de consulta e manipulação de dados
+- **PL/SQL** – Procedures, functions, packages, triggers e blocos anônimos  
+- **SQL** – Linguagem de consulta e manipulação de dados completa
 
 ---
 
@@ -187,11 +226,25 @@ SELECT sequence_name, last_number FROM user_sequences;
 - As triggers garantem a integridade e automação do sistema  
 - Todas as constraints de integridade referencial estão implementadas  
 - O banco está populado com dados realistas para testes
+- Os exemplos PL/SQL servem como material de estudo e referência
 
 ---
 
 ## 📌 Status
 
-- **Status:** Em desenvolvimento 
-- **Versão:** 1.0  
-- **Data:** Junho 2025
+- **Status:** Completo 
+- **Versão:** 2.0  
+- **Data:** Julho 2025
+- **Licença:** MIT License
+
+---
+
+## 🤝 Contribuições
+
+Este projeto foi desenvolvido como trabalho acadêmico para a disciplina de Banco de Dados da UFPE. Contribuições são bem-vindas através de issues e pull requests.
+
+---
+
+## 📞 Contato
+
+Para dúvidas ou sugestões, entre em contato com a equipe de desenvolvimento através dos usuários listados na seção de equipe.
