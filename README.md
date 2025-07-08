@@ -31,6 +31,21 @@ Este projeto implementa um banco de dados completo para gerenciar todas as opera
 
 ---
 
+
+## ✨ Modelo Entidade-Relacionamento (ER)
+
+Este banco foi modelado com um diagrama ER para representar os dados de forma clara e relacional.
+
+### Estrutura
+
+- **Programa** com temporadas e episódios.
+- **Conteúdo** relacionado à produção, exibição e anúncios.
+- **Funcionários** participam e supervisionam produções.
+- **Anunciantes** promovem campanhas por meio de anúncios.
+
+### Diagrama
+
+![Modelo ER](./modelo_er.jpg)
 ## 📁 Estrutura do Projeto
 
 ```
